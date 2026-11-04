@@ -1,0 +1,38 @@
+# Node & Frontend dependencies
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+
+# Python & Backend
+backend/venv/
+backend/__pycache__/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+backend/instance/*.db
+backend/instance/*.sqlite
+instance/
+backend/.env
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs & scratch
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
