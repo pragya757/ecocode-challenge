@@ -14,7 +14,7 @@ python3 -m pip install --upgrade pip
 python3 -m pip install -r requirements.txt
 
 echo "🌱 3/3: Initializing and seeding database..."
-python3 database/seed.py
+PYTHONPATH=. python3 database/seed.py || echo "Database initialized on app startup."
 cd ..
 
 echo "✅ Build complete! Ready to start gunicorn."

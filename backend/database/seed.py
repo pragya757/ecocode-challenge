@@ -1,4 +1,8 @@
 """Seed the database with initial data."""
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 import json
 from models import db, Lesson, Quiz, Question, Challenge, Badge
 
@@ -525,3 +529,10 @@ def seed_all():
     seed_quizzes()
     seed_challenges()
     print("✅ Database seeded successfully!")
+
+
+if __name__ == '__main__':
+    from app import app
+    with app.app_context():
+        seed_all()
+
