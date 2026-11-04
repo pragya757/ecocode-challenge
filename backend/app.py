@@ -2,7 +2,7 @@ import os
 import sys
 sys.path.insert(0, os.path.dirname(__file__))
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, send_from_directory
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from dotenv import load_dotenv
@@ -31,7 +31,7 @@ def create_app():
     # Extensions
     db.init_app(app)
     JWTManager(app)
-    CORS(app, origins=['http://localhost:5173', 'http://localhost:3000', '*'],
+    CORS(app, origins=['http://localhost:5173', 'http://localhost:5174', 'http://localhost:3000', '*'],
          supports_credentials=True)
 
     # Blueprints
@@ -46,6 +46,18 @@ def create_app():
     @app.route('/api/health')
     def health():
         return jsonify({'status': 'ok', 'message': 'EcoCode Challenge API running'}), 200
+
+    # Serve React Frontend (Single-page app routing)
+    dist_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'frontend', 'dist'))
+
+    @app.route('/', defaults={'path': ''})
+    @app.route('/<path:path>')
+    def serve_frontend(path):
+        if path != "" and os.path.exists(os.path.join(dist_dir, path)):
+            return send_from_directory(dist_dir, path)
+        elif os.path.exists(os.path.join(dist_dir, 'index.html')):
+            return send_from_directory(dist_dir, 'index.html')
+        return jsonify({'status': 'ok', 'message': 'EcoCode Challenge API running. Build frontend/dist to view UI.'}), 200
 
     # Initialize DB
     with app.app_context():
