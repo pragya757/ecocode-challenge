@@ -10,6 +10,33 @@ import {
   RotateCcw, Lightbulb, Sparkles, Code2, Award, Zap, Check, Settings2
 } from 'lucide-react'
 
+const LANGUAGE_CONFIGS = {
+  python: {
+    name: 'Python',
+    monacoLang: 'python',
+    filename: 'solution.py',
+    template: (init) => init || '# Python Green Solution\ndef solution(data):\n    # Write energy-efficient code here\n    pass\n'
+  },
+  javascript: {
+    name: 'JavaScript',
+    monacoLang: 'javascript',
+    filename: 'solution.js',
+    template: () => '// JavaScript Green Solution\nfunction solution(data) {\n  // Optimize memory and CPU execution\n  return data;\n}\n'
+  },
+  java: {
+    name: 'Java',
+    monacoLang: 'java',
+    filename: 'Solution.java',
+    template: () => '// Java Green Solution\npublic class Solution {\n    public static void main(String[] args) {\n        // Minimize object allocations & GC pauses\n    }\n}\n'
+  },
+  cpp: {
+    name: 'C++',
+    monacoLang: 'cpp',
+    filename: 'solution.cpp',
+    template: () => '// C++ High-Efficiency Green Solution\n#include <iostream>\n#include <vector>\n\nint main() {\n    // Direct memory management & cache locality\n    return 0;\n}\n'
+  }
+}
+
 export default function ChallengeDetail() {
   const { id } = useParams()
   const { user } = useAuth()
@@ -19,6 +46,12 @@ export default function ChallengeDetail() {
   const [code, setCode] = useState('')
   const [answer, setAnswer] = useState('')
   const [language, setLanguage] = useState('python')
+  const [codesByLang, setCodesByLang] = useState({
+    python: '',
+    javascript: LANGUAGE_CONFIGS.javascript.template(),
+    java: LANGUAGE_CONFIGS.java.template(),
+    cpp: LANGUAGE_CONFIGS.cpp.template()
+  })
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
   const [showHint, setShowHint] = useState(false)
@@ -30,7 +63,12 @@ export default function ChallengeDetail() {
         setLoading(true)
         const res = await api.get(`/challenges/${id}`)
         setChallenge(res.data.challenge)
-        setCode(res.data.challenge.initial_code || '# Write your green optimized code here\n')
+        const initPython = LANGUAGE_CONFIGS.python.template(res.data.challenge.initial_code)
+        setCode(initPython)
+        setCodesByLang(prev => ({
+          ...prev,
+          python: initPython
+        }))
       } catch (err) {
         console.error(err)
       } finally {
@@ -40,12 +78,26 @@ export default function ChallengeDetail() {
     fetchChallenge()
   }, [id])
 
+  const handleLanguageChange = (newLang) => {
+    setCodesByLang(prev => ({
+      ...prev,
+      [language]: code
+    }))
+    setLanguage(newLang)
+    setCode(codesByLang[newLang] || LANGUAGE_CONFIGS[newLang]?.template() || '')
+  }
+
   const handleReset = () => {
-    if (challenge) {
-      setCode(challenge.initial_code || '')
-      setAnswer('')
-      setResult(null)
-    }
+    const defaultForLang = language === 'python'
+      ? LANGUAGE_CONFIGS.python.template(challenge?.initial_code)
+      : (LANGUAGE_CONFIGS[language]?.template() || '')
+    setCode(defaultForLang)
+    setCodesByLang(prev => ({
+      ...prev,
+      [language]: defaultForLang
+    }))
+    setAnswer('')
+    setResult(null)
   }
 
   const handleSubmit = async (e) => {
@@ -206,15 +258,17 @@ export default function ChallengeDetail() {
               </div>
 
               <div className="flex items-center gap-3">
-                <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs">
+                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs">
                   <span className="text-slate-400 text-[11px] font-medium">Lang:</span>
                   <select
                     value={language}
-                    onChange={(e) => setLanguage(e.target.value)}
+                    onChange={(e) => handleLanguageChange(e.target.value)}
                     className="bg-transparent text-slate-800 dark:text-slate-200 font-bold focus:outline-none cursor-pointer"
                   >
                     <option value="python">Python</option>
                     <option value="javascript">JavaScript</option>
+                    <option value="java">Java</option>
+                    <option value="cpp">C++</option>
                   </select>
                 </div>
 
@@ -236,7 +290,7 @@ export default function ChallengeDetail() {
                   <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80"></span>
                   <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80"></span>
                   <span className="ml-2 font-mono text-slate-700 dark:text-slate-300 font-semibold text-[11px]">
-                    {language === 'python' ? 'solution.py' : 'solution.js'}
+                    {LANGUAGE_CONFIGS[language]?.filename || 'solution.txt'}
                   </span>
                 </div>
                 <div className="flex items-center gap-2 text-[11px] font-mono text-emerald-600 dark:text-emerald-400 font-medium">
@@ -245,7 +299,7 @@ export default function ChallengeDetail() {
               </div>
               <Editor
                 height="380px"
-                language={language}
+                language={LANGUAGE_CONFIGS[language]?.monacoLang || language}
                 theme={dark ? "vs-dark" : "light"}
                 value={code}
                 onChange={(val) => setCode(val || '')}
