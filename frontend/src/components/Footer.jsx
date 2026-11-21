@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import Logo from './Logo'
 import { Leaf, Github, Twitter, Linkedin, Mail, Code2, BookOpen, Trophy, Zap } from 'lucide-react'
 
 export default function Footer() {
@@ -8,14 +9,8 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Brand */}
           <div className="lg:col-span-1">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-9 h-9 bg-gradient-to-br from-green-700 to-emerald-500 rounded-xl flex items-center justify-center shadow-lg">
-                <Leaf className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <span className="text-lg font-black text-green-400">EcoCode</span>
-                <span className="text-lg font-black text-white ml-1">Challenge</span>
-              </div>
+            <div className="mb-4">
+              <Logo size="md" />
             </div>
             <p className="text-sm text-slate-400 leading-relaxed mb-5">
               Code Smarter. Think Greener. Build a Sustainable Future. 

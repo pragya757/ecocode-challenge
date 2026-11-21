@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useTheme } from '../context/ThemeContext'
+import Logo from './Logo'
 import { Menu, X, Sun, Moon, Leaf, ChevronDown, LogOut, User, LayoutDashboard, Trophy } from 'lucide-react'
 
 export default function Navbar() {
@@ -32,14 +33,8 @@ export default function Navbar() {
       <div className="container-custom">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 group">
-            <div className="w-9 h-9 bg-gradient-to-br from-green-700 to-emerald-500 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
-              <Leaf className="w-5 h-5 text-white" />
-            </div>
-            <div className="hidden sm:block">
-              <span className="text-lg font-black text-green-700 dark:text-green-400">EcoCode</span>
-              <span className="text-lg font-black text-slate-800 dark:text-white ml-1">Challenge</span>
-            </div>
+          <Link to="/" className="flex items-center">
+            <Logo size="md" />
           </Link>
 
           {/* Desktop Nav */}

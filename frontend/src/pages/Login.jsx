@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { LogoIcon } from '../components/Logo'
 import { Leaf, Mail, Lock, Eye, EyeOff, ArrowRight, AlertCircle, Sparkles } from 'lucide-react'
 
 export default function Login() {
@@ -50,8 +51,8 @@ export default function Login() {
       <div className="max-w-md w-full space-y-8 animate-fade-in">
         {/* Header */}
         <div className="text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-tr from-green-600 to-emerald-400 text-white shadow-lg shadow-green-500/20 mb-4">
-            <Leaf className="w-8 h-8" />
+          <div className="inline-flex items-center justify-center mb-4">
+            <LogoIcon className="w-16 h-16" showContainer={true} />
           </div>
           <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">
             Welcome Back
