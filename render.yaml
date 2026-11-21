@@ -1,3 +1,9 @@
+databases:
+  - name: ecocode-db
+    plan: free
+    databaseName: ecocode
+    user: ecocode_user
+
 services:
   - type: web
     name: ecocode-challenge
@@ -8,9 +14,13 @@ services:
     envVars:
       - key: FLASK_ENV
         value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ecocode-db
+          property: connectionString
       - key: SECRET_KEY
-        generateValue: true
+        value: ecocode-production-super-secret-key-2026
       - key: JWT_SECRET_KEY
-        generateValue: true
+        value: ecocode-jwt-production-secret-key-2026
       - key: PYTHON_VERSION
         value: 3.11.9

@@ -24,11 +24,30 @@ def create_app():
     app = Flask(__name__)
 
     # Configuration
-    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev-secret-key-change-in-prod')
-    app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', 'jwt-secret-change-in-prod')
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///ecocode.db')
+    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'ecocode-production-super-secret-key-2026')
+    app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', 'ecocode-jwt-production-secret-key-2026')
+
+    # Database Configuration: Supports Managed PostgreSQL (Render/Neon/Supabase) & SQLite fallback
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    database_url = os.getenv('DATABASE_URL')
+    
+    if database_url:
+        # Normalize postgres:// to postgresql:// (required by SQLAlchemy 2.x)
+        if database_url.startswith('postgres://'):
+            database_url = database_url.replace('postgres://', 'postgresql://', 1)
+        app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+        app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+            'pool_pre_ping': True,
+            'pool_recycle': 300,
+        }
+    else:
+        # Robust absolute path for SQLite
+        instance_dir = os.path.join(basedir, 'instance')
+        os.makedirs(instance_dir, exist_ok=True)
+        app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(instance_dir, 'ecocode.db')}"
+
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['JWT_ACCESS_TOKEN_EXPIRES'] = False  # Tokens don't expire for dev
+    app.config['JWT_ACCESS_TOKEN_EXPIRES'] = False  # Keep sessions persistent
 
     # Extensions
     db.init_app(app)

@@ -30,17 +30,21 @@ def register():
     if User.query.filter_by(email=email).first():
         return jsonify({'error': 'Email already registered'}), 409
 
-    user = User(
-        full_name=full_name,
-        email=email,
-        password_hash=generate_password_hash(password)
-    )
-    db.session.add(user)
-    db.session.flush()
+    try:
+        user = User(
+            full_name=full_name,
+            email=email,
+            password_hash=generate_password_hash(password)
+        )
+        db.session.add(user)
+        db.session.flush()
 
-    streak = UserStreak(user_id=user.id, current_streak=0, longest_streak=0)
-    db.session.add(streak)
-    db.session.commit()
+        streak = UserStreak(user_id=user.id, current_streak=0, longest_streak=0)
+        db.session.add(streak)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Failed to register account: {str(e)}'}), 500
 
     access_token = create_access_token(identity=str(user.id))
     return jsonify({
