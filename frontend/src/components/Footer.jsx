@@ -78,13 +78,13 @@ export default function Footer() {
         </div>
 
         <div className="mt-10 pt-8 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-          <p>© 2024 EcoCode Challenge. Built with 💚 for a greener internet.</p>
-          <div className="flex items-center gap-4">
-            <span className="flex items-center gap-1">
-              <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+          <p>© 2026 EcoCode Challenge. Built with 💚 by <span className="text-emerald-400 font-bold hover:underline cursor-default">Pragya</span> for a greener internet.</p>
+          <div className="flex flex-wrap items-center gap-4">
+            <span className="flex items-center gap-1.5">
+              <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
               API Online
             </span>
-            <span>Made for sustainable developers</span>
+            <span>Crafted by <strong className="text-slate-300 font-semibold">Pragya</strong> for sustainable developers</span>
           </div>
         </div>
       </div>

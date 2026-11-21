@@ -74,9 +74,11 @@ export default function Home() {
           <div className="max-w-4xl mx-auto text-center">
             {/* Badge */}
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-900/40 border border-green-700/50 text-green-400 text-sm font-medium mb-8 backdrop-blur-sm animate-fade-in">
-              <Leaf className="w-4 h-4" />
+              <Leaf className="w-4 h-4 text-emerald-400" />
               <span>Join the Green Coding Revolution</span>
-              <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+              <span className="hidden sm:inline text-emerald-500/60">•</span>
+              <span className="hidden sm:inline text-xs text-emerald-300/80 font-bold">Crafted by Pragya</span>
+              <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse ml-1"></span>
             </div>
 
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-white mb-6 leading-tight animate-slide-up">

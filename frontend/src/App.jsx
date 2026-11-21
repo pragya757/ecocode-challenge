@@ -3,6 +3,7 @@ import { AuthProvider, useAuth } from './context/AuthContext'
 import { ThemeProvider } from './context/ThemeContext'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
+import EcoChatBot from './components/EcoChatBot'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
@@ -62,6 +63,7 @@ function AppContent() {
         </Routes>
       </main>
       <Footer />
+      <EcoChatBot />
     </div>
   )
 }
