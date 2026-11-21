@@ -3,7 +3,7 @@ import api from '../services/api'
 import {
   Globe2, Leaf, Zap, ShieldCheck, AlertTriangle, ArrowRight,
   TrendingDown, Smartphone, Car, TreePine, Sparkles, RefreshCw,
-  CheckCircle2, FileText, Database, HardDrive, Cpu, ExternalLink
+  CheckCircle2, FileText, Database, HardDrive, Cpu, ExternalLink, X
 } from 'lucide-react'
 
 export default function CarbonInspector() {
@@ -89,8 +89,18 @@ export default function CarbonInspector() {
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               placeholder="Enter domain (e.g. greenweb.org or https://your-site.com)..."
-              className="w-full pl-12 pr-4 py-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/60 dark:bg-slate-950 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 font-mono text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-emerald-500/25 focus:border-emerald-500 dark:focus:border-emerald-400 transition-all duration-200"
+              className="w-full pl-12 pr-10 py-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/60 dark:bg-slate-950 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 font-mono text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-emerald-500/25 focus:border-emerald-500 dark:focus:border-emerald-400 transition-all duration-200"
             />
+            {url && (
+              <button
+                type="button"
+                onClick={() => setUrl('')}
+                className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
+                title="Clear input"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
           </div>
 
           <button
