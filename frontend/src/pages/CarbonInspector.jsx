@@ -72,7 +72,7 @@ export default function CarbonInspector() {
       </div>
 
       {/* Input Box Card */}
-      <div className="card p-6 md:p-8 border border-slate-200 dark:border-slate-800 shadow-xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-md space-y-4">
+      <div className="card p-6 md:p-8 border border-slate-200 dark:border-slate-800 shadow-xl bg-white/95 dark:bg-slate-900/95 backdrop-blur-md space-y-4">
         <form
           onSubmit={(e) => {
             e.preventDefault()
@@ -80,8 +80,8 @@ export default function CarbonInspector() {
           }}
           className="flex flex-col sm:flex-row gap-3"
         >
-          <div className="relative flex-1">
-            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+          <div className="relative flex-1 group">
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 dark:text-emerald-500/80 group-focus-within:text-emerald-500 transition-colors">
               <Globe2 className="w-5 h-5" />
             </div>
             <input
@@ -89,14 +89,14 @@ export default function CarbonInspector() {
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               placeholder="Enter domain (e.g. greenweb.org or https://your-site.com)..."
-              className="input-field pl-11 py-3 text-sm md:text-base font-mono"
+              className="w-full pl-12 pr-4 py-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/60 dark:bg-slate-950 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 font-mono text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-emerald-500/25 focus:border-emerald-500 dark:focus:border-emerald-400 transition-all duration-200"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="btn-primary py-3 px-8 text-sm md:text-base flex items-center justify-center gap-2 whitespace-nowrap disabled:opacity-50"
+            className="btn-primary py-3.5 px-8 text-sm md:text-base flex items-center justify-center gap-2 whitespace-nowrap bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20 disabled:opacity-50 font-bold"
           >
             {loading ? (
               <>
