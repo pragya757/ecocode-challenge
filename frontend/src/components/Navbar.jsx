@@ -23,6 +23,7 @@ export default function Navbar() {
     { to: '/code-comparison', label: 'Code Comparison' },
     { to: '/challenges', label: 'Challenges' },
     { to: '/quizzes', label: 'Quizzes' },
+    { to: '/carbon-inspector', label: 'Carbon Inspector', badge: 'New' },
     { to: '/leaderboard', label: 'Leaderboard' },
   ]
 
@@ -49,10 +50,15 @@ export default function Navbar() {
                 to={link.to}
                 end={link.to === '/'}
                 className={({ isActive }) =>
-                  `nav-link px-3 py-2 rounded-lg text-sm ${isActive ? 'text-green-700 dark:text-green-400 bg-green-50 dark:bg-green-900/20' : ''}`
+                  `nav-link px-3 py-2 rounded-lg text-sm flex items-center ${isActive ? 'text-green-700 dark:text-green-400 bg-green-50 dark:bg-green-900/20' : ''}`
                 }
               >
-                {link.label}
+                <span>{link.label}</span>
+                {link.badge && (
+                  <span className="ml-1.5 px-1.5 py-0.2 text-[9px] font-black uppercase rounded-full bg-emerald-500 text-white shadow-xs">
+                    {link.badge}
+                  </span>
+                )}
               </NavLink>
             ))}
           </div>

@@ -56,6 +56,7 @@ export default function Footer() {
               <Zap className="w-4 h-4 text-lime-400" /> Platform
             </h3>
             <ul className="space-y-2 text-sm">
+              <li><Link to="/carbon-inspector" className="hover:text-green-400 transition-colors">Carbon Inspector</Link></li>
               <li><Link to="/leaderboard" className="hover:text-green-400 transition-colors">Leaderboard</Link></li>
               <li><Link to="/dashboard" className="hover:text-green-400 transition-colors">Dashboard</Link></li>
               <li><Link to="/profile" className="hover:text-green-400 transition-colors">Profile</Link></li>

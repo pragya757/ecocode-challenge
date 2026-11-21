@@ -14,6 +14,7 @@ from routes.challenges import challenges_bp
 from routes.leaderboard import leaderboard_bp
 from routes.profile import profile_bp
 from routes.dashboard import dashboard_bp
+from routes.carbon_inspector import carbon_inspector_bp
 
 load_dotenv()
 
@@ -42,6 +43,7 @@ def create_app():
     app.register_blueprint(leaderboard_bp, url_prefix='/api/leaderboard')
     app.register_blueprint(profile_bp, url_prefix='/api/profile')
     app.register_blueprint(dashboard_bp, url_prefix='/api/dashboard')
+    app.register_blueprint(carbon_inspector_bp, url_prefix='/api/carbon-inspector')
 
     @app.route('/api/health')
     def health():

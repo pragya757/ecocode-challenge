@@ -15,6 +15,7 @@ import Quizzes from './pages/Quizzes'
 import QuizDetail from './pages/QuizDetail'
 import Leaderboard from './pages/Leaderboard'
 import Profile from './pages/Profile'
+import CarbonInspector from './pages/CarbonInspector'
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth()
@@ -43,6 +44,7 @@ function AppContent() {
           <Route path="/quizzes" element={<Quizzes />} />
           <Route path="/quizzes/:id" element={<QuizDetail />} />
           <Route path="/leaderboard" element={<Leaderboard />} />
+          <Route path="/carbon-inspector" element={<CarbonInspector />} />
           <Route path="/dashboard" element={
             <ProtectedRoute><Dashboard /></ProtectedRoute>
           } />
