@@ -6,6 +6,7 @@ import {
   Leaf, Trophy, Flame, Zap, BookOpen, Target, Award,
   ArrowRight, CheckCircle2, TrendingUp, Sparkles, AlertCircle
 } from 'lucide-react'
+import GreenHeatmap from '../components/GreenHeatmap'
 import {
   ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid
 } from 'recharts'
@@ -15,21 +16,24 @@ export default function Dashboard() {
   const [stats, setStats] = useState(null)
   const [dailyChallenge, setDailyChallenge] = useState(null)
   const [myRank, setMyRank] = useState(null)
+  const [profileData, setProfileData] = useState(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true)
-        const [statsRes, dailyRes, rankRes] = await Promise.allSettled([
+        const [statsRes, dailyRes, rankRes, profileRes] = await Promise.allSettled([
           api.get('/dashboard/stats'),
           api.get('/challenges/daily'),
-          api.get('/leaderboard/my-rank')
+          api.get('/leaderboard/my-rank'),
+          api.get('/profile/')
         ])
 
         if (statsRes.status === 'fulfilled') setStats(statsRes.value.data)
         if (dailyRes.status === 'fulfilled') setDailyChallenge(dailyRes.value.data.challenge)
         if (rankRes.status === 'fulfilled') setMyRank(rankRes.value.data)
+        if (profileRes.status === 'fulfilled') setProfileData(profileRes.value.data)
       } catch (err) {
         console.error(err)
       } finally {
@@ -263,6 +267,13 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+
+      {/* Green Contribution Heatmap */}
+      <GreenHeatmap
+        activityData={profileData?.activity_heatmap}
+        streak={stats?.streak}
+        longestStreak={profileData?.activity_heatmap?.longest_streak}
+      />
 
       {/* Quick Launchpad Navigation */}
       <div className="space-y-4">

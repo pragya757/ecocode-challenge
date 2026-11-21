@@ -2,11 +2,13 @@ import { useState, useEffect } from 'react'
 import { useAuth } from '../context/AuthContext'
 import api from '../services/api'
 import CertificateModal from '../components/CertificateModal'
+import GreenHeatmap from '../components/GreenHeatmap'
+import GithubBadgeGenerator from '../components/GithubBadgeGenerator'
 import { fireBadgeConfetti } from '../utils/confetti'
 import {
   User, Award, Flame, Leaf, Trophy, Edit3, Check,
   Save, History, Sparkles, BookOpen, Target, CheckCircle2,
-  Lock, Calendar, LogOut
+  Lock, Calendar, LogOut, Github
 } from 'lucide-react'
 
 export default function Profile() {
@@ -92,21 +94,33 @@ export default function Profile() {
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2.5">
             <button
               onClick={() => {
                 fireBadgeConfetti()
                 setShowCert(true)
               }}
-              className="btn-primary py-2 px-3.5 text-xs flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 shadow-sm"
+              className="btn-primary py-2 px-3 text-xs flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 shadow-sm"
               title="View Official Certificate"
             >
               <Award className="w-3.5 h-3.5" />
-              <span>Official Certificate</span>
+              <span>Certificate</span>
+            </button>
+            <button
+              onClick={() => setActiveTab('github-badge')}
+              className={`py-2 px-3 text-xs rounded-xl font-bold flex items-center gap-1.5 transition-all border ${
+                activeTab === 'github-badge'
+                  ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-transparent shadow-sm'
+                  : 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:border-emerald-500'
+              }`}
+              title="Generate GitHub README Badge"
+            >
+              <Github className="w-3.5 h-3.5 text-emerald-500" />
+              <span>README Badge</span>
             </button>
             <button
               onClick={() => setIsEditing(!isEditing)}
-              className="btn-secondary py-2 px-4 text-xs flex items-center gap-1.5"
+              className="btn-secondary py-2 px-3.5 text-xs flex items-center gap-1.5"
             >
               <Edit3 className="w-3.5 h-3.5" />
               <span>{isEditing ? 'Cancel' : 'Edit Profile'}</span>
@@ -196,8 +210,15 @@ export default function Profile() {
         </div>
       </div>
 
+      {/* Green Contribution Heatmap */}
+      <GreenHeatmap
+        activityData={profileData?.activity_heatmap}
+        streak={u?.streak}
+        longestStreak={profileData?.activity_heatmap?.longest_streak}
+      />
+
       {/* Tabs Navigation */}
-      <div className="flex border-b border-slate-200 dark:border-slate-800 gap-6 text-sm font-bold">
+      <div className="flex flex-wrap border-b border-slate-200 dark:border-slate-800 gap-4 sm:gap-6 text-sm font-bold">
         <button
           onClick={() => setActiveTab('badges')}
           className={`pb-3 flex items-center gap-2 border-b-2 transition-all ${
@@ -207,6 +228,17 @@ export default function Profile() {
           }`}
         >
           <Award className="w-4 h-4" /> Badges & Achievements
+        </button>
+
+        <button
+          onClick={() => setActiveTab('github-badge')}
+          className={`pb-3 flex items-center gap-2 border-b-2 transition-all ${
+            activeTab === 'github-badge'
+              ? 'border-emerald-600 text-emerald-600 dark:text-emerald-400'
+              : 'border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
+          }`}
+        >
+          <Github className="w-4 h-4" /> GitHub README Badge
         </button>
 
         <button
@@ -361,6 +393,13 @@ export default function Profile() {
               )}
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Tab: GitHub README Badge Generator */}
+      {activeTab === 'github-badge' && (
+        <div className="animate-fade-in">
+          <GithubBadgeGenerator user={u} />
         </div>
       )}
     </div>
