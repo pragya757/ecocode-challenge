@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '../context/AuthContext'
 import api from '../services/api'
+import CertificateModal from '../components/CertificateModal'
+import { fireBadgeConfetti } from '../utils/confetti'
 import {
   User, Award, Flame, Leaf, Trophy, Edit3, Check,
   Save, History, Sparkles, BookOpen, Target, CheckCircle2,
@@ -15,6 +17,7 @@ export default function Profile() {
   const [editForm, setEditForm] = useState({ full_name: '', bio: '' })
   const [saveSuccess, setSaveSuccess] = useState(false)
   const [activeTab, setActiveTab] = useState('badges') // 'badges' | 'points' | 'history'
+  const [showCert, setShowCert] = useState(false)
 
   const fetchProfile = async () => {
     try {
@@ -91,6 +94,17 @@ export default function Profile() {
 
           <div className="flex items-center gap-3">
             <button
+              onClick={() => {
+                fireBadgeConfetti()
+                setShowCert(true)
+              }}
+              className="btn-primary py-2 px-3.5 text-xs flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 shadow-sm"
+              title="View Official Certificate"
+            >
+              <Award className="w-3.5 h-3.5" />
+              <span>Official Certificate</span>
+            </button>
+            <button
               onClick={() => setIsEditing(!isEditing)}
               className="btn-secondary py-2 px-4 text-xs flex items-center gap-1.5"
             >
@@ -106,6 +120,9 @@ export default function Profile() {
             </button>
           </div>
         </div>
+
+        {/* Certificate Modal */}
+        {showCert && <CertificateModal user={u} onClose={() => setShowCert(false)} />}
 
         {/* Edit Form Drawer */}
         {isEditing && (

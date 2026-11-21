@@ -1,19 +1,24 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { useTheme } from '../context/ThemeContext'
 import api from '../services/api'
+import Editor from '@monaco-editor/react'
+import { fireCelebrationConfetti } from '../utils/confetti'
 import {
   Target, ArrowLeft, CheckCircle2, AlertCircle, Play,
-  RotateCcw, Lightbulb, Sparkles, Code2, Award, Zap, Check
+  RotateCcw, Lightbulb, Sparkles, Code2, Award, Zap, Check, Settings2
 } from 'lucide-react'
 
 export default function ChallengeDetail() {
   const { id } = useParams()
   const { user } = useAuth()
+  const { dark } = useTheme()
 
   const [challenge, setChallenge] = useState(null)
   const [code, setCode] = useState('')
   const [answer, setAnswer] = useState('')
+  const [language, setLanguage] = useState('python')
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
   const [showHint, setShowHint] = useState(false)
@@ -52,6 +57,7 @@ export default function ChallengeDetail() {
       const res = await api.post(`/challenges/${id}/submit`, { code, answer })
       setResult(res.data)
       if (res.data.is_correct) {
+        fireCelebrationConfetti()
         setChallenge(prev => ({
           ...prev,
           completed: true,
@@ -199,24 +205,62 @@ export default function ChallengeDetail() {
                 </h3>
               </div>
 
-              <button
-                type="button"
-                onClick={handleReset}
-                className="text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 flex items-center gap-1"
-              >
-                <RotateCcw className="w-3.5 h-3.5" /> Reset Code
-              </button>
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs">
+                  <span className="text-slate-400 text-[11px] font-medium">Lang:</span>
+                  <select
+                    value={language}
+                    onChange={(e) => setLanguage(e.target.value)}
+                    className="bg-transparent text-slate-800 dark:text-slate-200 font-bold focus:outline-none cursor-pointer"
+                  >
+                    <option value="python">Python</option>
+                    <option value="javascript">JavaScript</option>
+                  </select>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleReset}
+                  className="text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 flex items-center gap-1"
+                >
+                  <RotateCcw className="w-3.5 h-3.5" /> Reset
+                </button>
+              </div>
             </div>
 
-            {/* Code Input */}
-            <div>
-              <textarea
+            {/* Monaco Code Editor */}
+            <div className="rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm bg-white dark:bg-slate-950">
+              <div className="px-4 py-2 bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500">
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80"></span>
+                  <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80"></span>
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80"></span>
+                  <span className="ml-2 font-mono text-slate-700 dark:text-slate-300 font-semibold text-[11px]">
+                    {language === 'python' ? 'solution.py' : 'solution.js'}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 text-[11px] font-mono text-emerald-600 dark:text-emerald-400 font-medium">
+                  <Sparkles className="w-3 h-3" /> Monaco Pro Editor
+                </div>
+              </div>
+              <Editor
+                height="380px"
+                language={language}
+                theme={dark ? "vs-dark" : "light"}
                 value={code}
-                onChange={(e) => setCode(e.target.value)}
-                rows={14}
-                required
-                placeholder="# Refactor the algorithm to minimize CPU cycles & memory allocations..."
-                className="w-full p-4 rounded-xl font-mono text-xs md:text-sm bg-slate-950 text-slate-100 border border-slate-800 focus:outline-none focus:ring-2 focus:ring-green-500 leading-relaxed resize-y"
+                onChange={(val) => setCode(val || '')}
+                options={{
+                  fontSize: 13,
+                  minimap: { enabled: false },
+                  scrollBeyondLastLine: false,
+                  automaticLayout: true,
+                  tabSize: 4,
+                  padding: { top: 12, bottom: 12 },
+                  fontFamily: "'JetBrains Mono', 'Fira Code', Menlo, monospace",
+                  fontLigatures: true,
+                  bracketPairColorization: { enabled: true },
+                  lineNumbersMinChars: 3,
+                }}
               />
             </div>
 

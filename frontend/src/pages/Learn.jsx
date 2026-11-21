@@ -2,9 +2,11 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import api from '../services/api'
+import CertificateModal from '../components/CertificateModal'
+import { fireCelebrationConfetti, fireCannons } from '../utils/confetti'
 import {
   BookOpen, CheckCircle2, Clock, Sparkles, ArrowRight,
-  Code2, AlertTriangle, Zap, Check, X, Search, ChevronRight
+  Code2, AlertTriangle, Zap, Check, X, Search, ChevronRight, Award
 } from 'lucide-react'
 
 export default function Learn() {
@@ -16,6 +18,7 @@ export default function Learn() {
   const [loading, setLoading] = useState(true)
   const [completing, setCompleting] = useState(false)
   const [completionMessage, setCompletionMessage] = useState(null)
+  const [showCert, setShowCert] = useState(false)
 
   const fetchLessons = async () => {
     try {
@@ -61,9 +64,17 @@ export default function Learn() {
       const res = await api.post(`/lessons/${lessonId}/complete`)
       setCompletionMessage(res.data)
       // Update local state
-      setLessons(prev => prev.map(l => l.id === lessonId ? { ...l, completed: true } : l))
+      const updatedLessons = lessons.map(l => l.id === lessonId ? { ...l, completed: true } : l)
+      setLessons(updatedLessons)
       if (selectedLesson?.id === lessonId) {
         setSelectedLesson(prev => ({ ...prev, completed: true }))
+      }
+
+      const totalDone = updatedLessons.filter(l => l.completed).length
+      if (totalDone === updatedLessons.length) {
+        fireCannons()
+      } else {
+        fireCelebrationConfetti()
       }
     } catch (err) {
       console.error(err)
@@ -108,6 +119,37 @@ export default function Learn() {
           </div>
         </div>
       </div>
+
+      {/* Certificate Unlocked Banner */}
+      {completedCount === lessons.length && lessons.length > 0 && (
+        <div className="mb-8 p-6 rounded-3xl bg-gradient-to-r from-emerald-900 via-green-900 to-teal-950 border border-emerald-500/50 text-white flex flex-col md:flex-row items-start md:items-center justify-between gap-5 shadow-2xl animate-fade-in relative overflow-hidden">
+          <div className="absolute top-0 right-0 -mr-8 -mt-8 w-40 h-40 bg-emerald-500/20 rounded-full blur-2xl pointer-events-none"></div>
+          <div className="flex items-center gap-4 relative z-10">
+            <div className="w-14 h-14 rounded-2xl bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 flex items-center justify-center text-3xl shadow-lg">
+              🎓
+            </div>
+            <div>
+              <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-emerald-400 mb-1">
+                <Sparkles className="w-3.5 h-3.5" /> Full Curriculum Mastered
+              </div>
+              <h3 className="text-xl font-black">Certified Green Software Engineer</h3>
+              <p className="text-xs text-emerald-100/80 mt-0.5 max-w-xl">
+                You have finished all 8 modules on sustainable architecture, memory optimization, and carbon-aware programming.
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => setShowCert(true)}
+            className="btn-primary py-3 px-6 text-xs font-black bg-emerald-400 text-slate-950 hover:bg-emerald-300 shadow-lg shadow-emerald-400/20 whitespace-nowrap self-stretch md:self-auto flex items-center justify-center gap-2 relative z-10"
+          >
+            <Award className="w-4 h-4" />
+            <span>View & Download Certificate</span>
+          </button>
+        </div>
+      )}
+
+      {/* Certificate Modal */}
+      {showCert && <CertificateModal user={user} onClose={() => setShowCert(false)} />}
 
       {/* Main Learning Hub Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">

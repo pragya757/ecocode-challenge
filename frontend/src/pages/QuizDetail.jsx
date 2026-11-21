@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import api from '../services/api'
+import { fireCannons, fireCelebrationConfetti } from '../utils/confetti'
 import {
   Zap, ArrowLeft, ArrowRight, CheckCircle2, XCircle,
   Trophy, RotateCcw, Award, Sparkles, HelpCircle, AlertCircle
@@ -51,6 +52,10 @@ export default function QuizDetail() {
         answers: selectedAnswers
       })
       setResults(res.data)
+      if (res.data.passed || res.data.percentage >= 80) {
+        fireCannons()
+        fireCelebrationConfetti()
+      }
     } catch (err) {
       console.error(err)
     } finally {
